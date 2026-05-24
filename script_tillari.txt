@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Script Tillari — O'quv-uslubiy kompleks</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --nav-h:62px;
+    --sidebar-w:255px;
+    --bg:#f7f6f3;
+    --bg2:#ffffff;
+    --bg3:#f0eeea;
+    --txt:#181816;
+    --txt2:#4a4946;
+    --txt3:#888680;
+    --bdr:#dedad2;
+    --bdr2:#c5c2ba;
+    --acc:#1355A0;
+    --acc-bg:#ddeaf8;
+    --acc-txt:#0e3f7a;
+    --green-bg:#e5f2d8;--green-txt:#2d5e0a;
+    --amber-bg:#faecd8;--amber-txt:#7a430a;
+    --teal-bg:#daf3ec;--teal-txt:#0a5c44;
+    --coral-bg:#faebe6;--coral-txt:#8c2e14;
+    --r:9px;--rl:13px;
+  }
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+
+  /* ── TOPBAR ── */
+  .topbar{
+    height:var(--nav-h);background:var(--bg2);border-bottom:1.5px solid var(--bdr);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 1.5rem;position:sticky;top:0;z-index:100;
+  }
+  .topbar-left{display:flex;align-items:center;gap:13px}
+  .logo-badge{
+    width:38px;height:38px;border-radius:9px;background:var(--acc);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;
+  }
+  .site-title{font-size:15.5px;font-weight:700;color:var(--txt)}
+  .site-sub{font-size:12px;color:var(--txt3);margin-top:1px}
+  .topbar-right{display:flex;gap:8px}
+  .top-btn{
+    font-size:13px;padding:6px 13px;border-radius:var(--r);border:1.5px solid var(--bdr);
+    background:transparent;color:var(--txt2);cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;font-weight:500;
+  }
+  .top-btn:hover{background:var(--bg3)}
+  .top-btn.prim{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .top-btn.prim:hover{background:#0e3f7a}
+
+  /* ── LAYOUT ── */
+  .layout{display:flex;height:calc(100vh - var(--nav-h))}
+
+  /* ── SIDEBAR ── */
+  .sidebar{
+    width:var(--sidebar-w);background:var(--bg2);border-right:1.5px solid var(--bdr);
+    overflow-y:auto;flex-shrink:0;padding:0.75rem 0 1rem;
+  }
+  .nav-group{margin-bottom:0.15rem}
+  .nav-group-label{
+    font-size:10.5px;font-weight:800;letter-spacing:.09em;color:var(--txt3);
+    padding:0.9rem 1.1rem 0.3rem;text-transform:uppercase;
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 1.1rem;font-size:13.5px;font-weight:600;
+    color:var(--txt2);cursor:pointer;border-left:3px solid transparent;
+    transition:all .1s;user-select:none;
+  }
+  .nav-item:hover{background:var(--bg3);color:var(--txt)}
+  .nav-item.active{
+    color:var(--acc);border-left-color:var(--acc);
+    background:var(--acc-bg);font-weight:700;
+  }
+  .nav-item i{font-size:17px;flex-shrink:0}
+
+  /* ── MAIN ── */
+  .main{flex:1;overflow-y:auto;padding:2rem 2.2rem}
+
+  .page{display:none}
+  .page.active{display:block}
+
+  .pg-header{margin-bottom:1.5rem}
+  .pg-header h1{font-size:21px;font-weight:700;color:var(--txt);margin-bottom:4px}
+  .pg-header p{font-size:13.5px;color:var(--txt2)}
+
+  /* ── CARD ── */
+  .card{
+    background:var(--bg2);border:1.5px solid var(--bdr);
+    border-radius:var(--rl);padding:1.3rem;margin-bottom:1rem;
+  }
+  .card-title{
+    font-size:14.5px;font-weight:700;color:var(--txt);
+    margin-bottom:0.85rem;display:flex;align-items:center;gap:8px;
+  }
+  .card-title i{font-size:18px;color:var(--acc)}
+  .card p{font-size:13.5px;color:var(--txt2);line-height:1.75}
+
+  /* ── STAT GRID ── */
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:1rem}
+  .stat-card{background:var(--bg3);border-radius:var(--r);padding:1rem}
+  .stat-lbl{font-size:12px;font-weight:600;color:var(--txt3);margin-bottom:5px}
+  .stat-val{font-size:26px;font-weight:700;color:var(--txt)}
+  .stat-sub{font-size:12px;color:var(--txt3);margin-top:2px}
+
+  /* ── BADGE ── */
+  .badge{display:inline-flex;align-items:center;font-size:11.5px;padding:3px 9px;border-radius:6px;font-weight:600}
+  .b-blue{background:var(--acc-bg);color:var(--acc-txt)}
+  .b-green{background:var(--green-bg);color:var(--green-txt)}
+  .b-amber{background:var(--amber-bg);color:var(--amber-txt)}
+  .b-teal{background:var(--teal-bg);color:var(--teal-txt)}
+  .b-coral{background:var(--coral-bg);color:var(--coral-txt)}
+
+  /* ── LIST ROW ── */
+  .row{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+  .row:last-child{border:none}
+  .icon-box{width:33px;height:33px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+  .ib-blue{background:var(--acc-bg);color:var(--acc)}
+  .ib-green{background:var(--green-bg);color:var(--green-txt)}
+  .ib-teal{background:var(--teal-bg);color:var(--teal-txt)}
+  .ib-amber{background:var(--amber-bg);color:var(--amber-txt)}
+  .row-title{font-size:13.5px;font-weight:600;color:var(--txt)}
+  .row-sub{font-size:12.5px;color:var(--txt2);margin-top:2px}
+
+  /* ── TABLE ── */
+  .tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .tbl th{background:var(--bg3);font-weight:700;color:var(--txt);padding:8px 10px;text-align:left;border:1px solid var(--bdr)}
+  .tbl td{padding:7px 10px;border:1px solid var(--bdr);color:var(--txt2);vertical-align:top;line-height:1.5}
+  .tbl tr:nth-child(even) td{background:#fafaf8}
+
+  /* ── SECTION HEADER ── */
+  .sec-head{
+    font-size:13px;font-weight:700;color:var(--acc);
+    background:var(--acc-bg);padding:7px 12px;border-radius:7px;
+    margin:0.75rem 0 0.5rem;display:flex;align-items:center;gap:6px;
+  }
+
+  /* ── INFO BOX ── */
+  .info-box{
+    background:var(--bg3);border-left:3px solid var(--acc);
+    border-radius:0 var(--r) var(--r) 0;padding:0.85rem 1rem;
+    font-size:13px;color:var(--txt2);line-height:1.7;margin-bottom:0.75rem;
+  }
+  .info-box strong{color:var(--txt);font-weight:700}
+
+  /* ── KV TABLE (info table) ── */
+  .kv-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:0.5rem}
+  .kv-tbl td{padding:6px 10px;border:1px solid var(--bdr);vertical-align:top}
+  .kv-tbl td:first-child{font-weight:700;color:var(--txt);white-space:nowrap;background:var(--bg3);width:42%}
+  .kv-tbl td:last-child{color:var(--txt2)}
+
+  /* ── TEST CARD ── */
+  .test-card{
+    background:var(--bg2);border:1.5px solid var(--bdr);border-radius:var(--rl);
+    padding:1.1rem 1.3rem;margin-bottom:10px;
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  }
+  .test-name{font-size:14px;font-weight:700;color:var(--txt)}
+  .test-meta{font-size:12.5px;color:var(--txt2);margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .btn-play{
+    padding:7px 16px;border-radius:var(--r);border:1.5px solid var(--bdr);
+    background:transparent;color:var(--txt);font-size:13px;font-weight:600;
+    cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0;
+  }
+  .btn-play:hover{background:var(--bg3)}
+  .btn-play:disabled{opacity:.4;cursor:not-allowed}
+  .btn-play:disabled:hover{background:transparent}
+
+  /* ── GLOSSARY ── */
+  .g-item{padding:10px 0;border-bottom:1px solid var(--bdr)}
+  .g-item:last-child{border:none}
+  .g-term{font-size:14px;font-weight:700;color:var(--acc)}
+  .g-def{font-size:13px;color:var(--txt2);margin-top:3px;line-height:1.65}
+  .g-def code{background:var(--bg3);padding:1px 5px;border-radius:4px;font-size:12px;font-family:monospace}
+
+  /* ── REFERENCES ── */
+  .ref-row{padding:9px 0;border-bottom:1px solid var(--bdr);display:flex;gap:10px}
+  .ref-row:last-child{border:none}
+  .ref-num{font-size:12px;font-weight:700;color:var(--txt3);min-width:28px;flex-shrink:0;padding-top:1px}
+  .ref-txt{font-size:13.5px;color:var(--txt2);line-height:1.6}
+  .ref-txt strong{color:var(--txt);font-weight:700}
+  .ref-txt a{color:var(--acc);text-decoration:none}
+  .ref-txt a:hover{text-decoration:underline}
+
+  /* ── SCROLLBARS ── */
+  .sidebar::-webkit-scrollbar,.main::-webkit-scrollbar{width:5px}
+  .sidebar::-webkit-scrollbar-track,.main::-webkit-scrollbar-track{background:transparent}
+  .sidebar::-webkit-scrollbar-thumb,.main::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+
+  /* ── DOCUMENT VIEWER ── */
+  .doc-actions{display:flex;flex-wrap:wrap;gap:10px;margin:0.75rem 0 1rem}
+  .doc-btn{
+    display:inline-flex;align-items:center;gap:7px;padding:8px 14px;
+    border-radius:var(--r);border:1.5px solid var(--bdr);
+    background:var(--bg2);color:var(--txt);text-decoration:none;
+    font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .doc-btn:hover{background:var(--bg3)}
+  .doc-btn.prim{background:var(--acc);border-color:var(--acc);color:#fff}
+  .doc-btn.prim:hover{background:#0e3f7a}
+  .pdf-frame{
+    width:100%;height:620px;border:1.5px solid var(--bdr);
+    border-radius:var(--rl);background:#fff;
+  }
+  .click-row{cursor:pointer;border-radius:var(--r);padding-left:8px;padding-right:8px}
+  .click-row:hover{background:var(--bg3)}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="logo-badge"><i class="ti ti-code"></i></div>
+    <div>
+      <div class="site-title">Script Tillari</div>
+      <div class="site-sub">Iqtisodiyot va Pedagogika Universiteti · ST 1609</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="top-btn"><i class="ti ti-search"></i> Qidirish</button>
+    <button class="top-btn prim"><i class="ti ti-user"></i> Kabinet</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-label">Umumiy</div>
+      <div class="nav-item active" onclick="go(this,'home')"><i class="ti ti-home"></i> Asosiy sahifa</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Fan haqida</div>
+      <div class="nav-item" onclick="go(this,'syllabus')"><i class="ti ti-file-description"></i> Fan dasturi</div>
+      <div class="nav-item" onclick="go(this,'sillabus')"><i class="ti ti-clipboard-list"></i> Sillabus</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Ta'lim materiallari</div>
+      <div class="nav-item" onclick="go(this,'lecture')"><i class="ti ti-book"></i> Ma'ruzalar</div>
+      <div class="nav-item" onclick="go(this,'lab')"><i class="ti ti-terminal-2"></i> Amaliy ishlar</div>
+      <div class="nav-item" onclick="go(this,'selfwork')"><i class="ti ti-pencil"></i> Mustaqil ishlar</div>
+      <div class="nav-item" onclick="go(this,'course')"><i class="ti ti-award"></i> Kurs ishi</div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Qo'shimcha</div>
+      <div class="nav-item" onclick="go(this,'glossary')"><i class="ti ti-vocabulary"></i> Glossariy</div>
+      <div class="nav-item" onclick="go(this,'tests')"><i class="ti ti-list-check"></i> Testlar</div>
+      <div class="nav-item" onclick="go(this,'references')"><i class="ti ti-books"></i> Adabiyotlar</div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ═══════════════ HOME ═══════════════ -->
+    <div class="page active" id="page-home">
+      <div class="pg-header">
+        <h1>Xush kelibsiz! 👋</h1>
+        <p>"Script Tillari" fani bo'yicha o'quv-uslubiy kompleksga</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-lbl">Ma'ruzalar</div><div class="stat-val">30</div><div class="stat-sub">60 soat (V+VI)</div></div>
+        <div class="stat-card"><div class="stat-lbl">Amaliy mashg'ulot</div><div class="stat-val">30</div><div class="stat-sub">60 soat (V+VI)</div></div>
+        <div class="stat-card"><div class="stat-lbl">Mustaqil ta'lim</div><div class="stat-val">150</div><div class="stat-sub">soat (90+60)</div></div>
+        <div class="stat-card"><div class="stat-lbl">ECTS Kredit</div><div class="stat-val">5/4</div><div class="stat-sub">V va VI semestr</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-info-circle"></i> Fan haqida umumiy ma'lumot</div>
+        <table class="kv-tbl">
+          <tr><td>Fan nomi</td><td>SCRIPT TILLARI (JavaScript, Python, PHP, Ruby, Perl, Grovy, Bash..)</td></tr>
+          <tr><td>Fan kodi</td><td>ST 1609</td></tr>
+          <tr><td>Fan turi</td><td>Majburiy</td></tr>
+          <tr><td>Semestr(lar)</td><td>5-semestr va 6-semestr</td></tr>
+          <tr><td>Ta'lim shakli</td><td>Kunduzgi</td></tr>
+          <tr><td>Baholash shakli</td><td>Imtihon</td></tr>
+          <tr><td>Fan tili</td><td>O'zbek</td></tr>
+          <tr><td>Muallif</td><td>Xaqberdiyev Asliddin Imomnazar o'g'li</td></tr>
+          <tr><td>Tashkilot</td><td>Iqtisodiyot va pedagogika universiteti, Kompyuter tizimlari kafedrasi</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-bolt"></i> Tezkor o'tishlar</div>
+        <div class="row click-row" onclick="goByKey('syllabus')">
+          <div class="icon-box ib-blue"><i class="ti ti-file-description"></i></div>
+          <div><div class="row-title">Fan dasturi (O'quv reja)</div><div class="row-sub"><span class="badge b-blue">PDF asosida</span></div></div>
+        </div>
+        <div class="row click-row" onclick="goByKey('sillabus')">
+          <div class="icon-box ib-teal"><i class="ti ti-clipboard-list"></i></div>
+          <div><div class="row-title">Sillabus — baholash va mavzular</div><div class="row-sub"><span class="badge b-teal">PDF asosida</span></div></div>
+        </div>
+        <div class="row click-row" onclick="goByKey('course')">
+          <div class="icon-box ib-amber"><i class="ti ti-award"></i></div>
+          <div><div class="row-title">Kurs ishi mavzulari (K1–K30)</div><div class="row-sub"><span class="badge b-amber">30 mavzu</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ FAN DASTURI ═══════════════ -->
+    <div class="page" id="page-syllabus">
+      <div class="pg-header">
+        <h1>Fan dasturi (O'quv dastur)</h1>
+        <p>Iqtisodiyot va Pedagogika Universiteti — ST 1609 · 2025-yil tasdiqlangan</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-file-description"></i> Fan dasturi fayli</div>
+        <p>Quyidagi oynada fan dasturi PDF fayli ko‘rinadi. PDF faylni sayt papkasida <strong>assets/pdf/fan-dasturi.pdf</strong> nomi bilan saqlang.</p>
+        <div class="doc-actions">
+          <a class="doc-btn prim" href="assets/pdf/fan-dasturi.pdf" target="_blank"><i class="ti ti-eye"></i> Fan dasturini ochish</a>
+          <a class="doc-btn" href="assets/pdf/fan-dasturi.pdf" download><i class="ti ti-download"></i> Yuklab olish</a>
+        </div>
+        <iframe class="pdf-frame" src="assets/pdf/fan-dasturi.pdf"></iframe>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-target"></i> Fanning maqsadi va vazifalari</div>
+        <div class="info-box">
+          <strong>Maqsad:</strong> Talabalarda web ilovalar yaratish yo'llari, usullari, texnologiyalari va turlari bo'yicha nazariy va amaliy bilimlarni hamda ularni amaliyotga tatbiq etish ko'nikmasini hosil qilishdan iborat.
+        </div>
+        <div class="info-box">
+          <strong>Vazifasi:</strong> Nazariy bilimlar, Atom, NotePad, SublimeText platformalarida script ilovalarni ishlab chiqish va testlash bo'yicha zaruriy bilimlar va amaliy ko'nikmalarni hosil qilish, web saytlar bilan ishlash, web dasturlash tillarida ilovalar yaratish ko'nikmalarini shakllantirish.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-table"></i> Fan bo'yicha soatlar taqsimoti</div>
+        <table class="tbl">
+          <tr><th>Fan nomi</th><th>Auditoriya mashg'ulotlari</th><th>Mustaqil ta'lim</th><th>Jami yuklama</th></tr>
+          <tr><td>SCRIPT TILLARI (JavaScript, Python, PHP, Ruby, Perl, Grovy, Bash..) 1,2</td><td>60 / 60 soat</td><td>90 / 60 soat</td><td>150 / 120 soat</td></tr>
+        </table>
+        <br>
+        <table class="tbl">
+          <tr><th>Mashg'ulot turi</th><th>V semestr</th><th>VI semestr</th></tr>
+          <tr><td>Ma'ruza</td><td>30 soat</td><td>30 soat</td></tr>
+          <tr><td>Amaliy mashg'ulotlar</td><td>30 soat</td><td>30 soat</td></tr>
+          <tr><td>Laboratoriya</td><td>—</td><td>—</td></tr>
+          <tr><td>Seminar</td><td>—</td><td>—</td></tr>
+          <tr><td>Mustaqil ta'lim</td><td>90 soat</td><td>60 soat</td></tr>
+          <tr><td><strong>Kredit miqdori</strong></td><td><strong>5</strong></td><td><strong>4</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-checklist"></i> Bilim, ko'nikma va malakaga qo'yiladigan talablar</div>
+        <div class="sec-head"><i class="ti ti-brain"></i> Bilimga qo'yiladigan talablar</div>
+        <div class="info-box">
+          — Web ilovalarning rivojlanish tarixi va asosiy paradigmalarini tushunish;<br>
+          — Web ilovaning strukturaviy va amaliy qismlarining xususiyatlari va ishlash prinsiplarini bilish;<br>
+          — Web saytlar, portallarlar, electron bazalar va ularning qo'llanilish sohalari;<br>
+          — Web saytlar va portallar uchun tuzilgan domen-hostinglarning ishlash mexanizmlarini tushunish.
+        </div>
+        <div class="sec-head"><i class="ti ti-tool"></i> Ko'nikmaga ega bo'lishi kerak</div>
+        <div class="info-box">
+          — Web ilovalarni o'qish, tahlil qilish va dastlabki hisob-kitoblarni bajarish;<br>
+          — Atom, NotePad, SublimeText kabi muhitlarda web ilovalarni modellashtirish;<br>
+          — Web saytlar qurilmalar (Android telefon, iPhone yoki kompyuter) yordamida web ilovalarni tekshirish va script nosozliklarni aniqlash.
+        </div>
+        <div class="sec-head"><i class="ti ti-certificate"></i> Malaka hosil qilishi kerak</div>
+        <div class="info-box">
+          — Dinamik va statik web saytlardagi scriptlarni mustaqil loyihalash va ishlatish;<br>
+          — Web ilovalar bo'yicha laboratoriya tajribalarini bajarish va natijalarni tahlil qilish;<br>
+          — Web saytlarni ishlatishda texnika xavfsizlik qoidalariga amal qilish;<br>
+          — Web ilovalarga mos bo'lgan innovatsion amaliy yechimlarni taklif qilish.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-book-2"></i> Ma'ruza mavzulari — V semestr (M1–M15)</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th><th>Soat</th></tr>
+          <tr><td>M1</td><td>Skriptli tillarida dasturlashga kirish</td><td>2</td></tr>
+          <tr><td>M2</td><td>Mijoz qismining dasturlash texnologiyalari</td><td>2</td></tr>
+          <tr><td>M3</td><td>Server qismining dasturlash texnologiyalari</td><td>2</td></tr>
+          <tr><td>M4</td><td>JavaScriptdan foydalanish imkoniyatlari</td><td>2</td></tr>
+          <tr><td>M5</td><td>JS da massivlar va lug'atlar</td><td>2</td></tr>
+          <tr><td>M6</td><td>JS da funktsiyalardan foydalanish</td><td>2</td></tr>
+          <tr><td>M7</td><td>JS asosiy kutubxonalari va freymvorklari</td><td>2</td></tr>
+          <tr><td>M8</td><td>JavaScript obyektlari</td><td>2</td></tr>
+          <tr><td>M9</td><td>JavaScript sinflari</td><td>2</td></tr>
+          <tr><td>M10</td><td>JS da prototiplar</td><td>2</td></tr>
+          <tr><td>M11</td><td>JavaScript JSON</td><td>2</td></tr>
+          <tr><td>M12</td><td>JavaScript HTML DOM</td><td>2</td></tr>
+          <tr><td>M13</td><td>JavaScript oyna-brauzerining ob'ekt modeli (BOM)</td><td>2</td></tr>
+          <tr><td>M14</td><td>Ruby dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td>M15</td><td>Perl dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td colspan="2"><strong>Jami (V semestr)</strong></td><td><strong>30</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-book-2"></i> Ma'ruza mavzulari — VI semestr (M16–M30)</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th><th>Soat</th></tr>
+          <tr><td>M16</td><td>PHP: ma&#x27;lumotlar turlari, o&#x27;zgaruvchilar, operatorlar, shartli bayonotlar</td><td>2</td></tr>
+          <tr><td>M17</td><td>PHP: sikllar va massivlar</td><td>2</td></tr>
+          <tr><td>M18</td><td>PHP: Indekslangan massiv, assotsiativ massiv</td><td>2</td></tr>
+          <tr><td>M19</td><td>PHP: satr funksiyalari, funksiyalar-parametrlangan funksiya</td><td>2</td></tr>
+          <tr><td>M20</td><td>PHP: qiymat bo&#x27;yicha qo&#x27;ng&#x27;iroq qilish</td><td>2</td></tr>
+          <tr><td>M21</td><td>PHPda hammasini mos yozuvlar bo&#x27;yicha qilish</td><td>2</td></tr>
+          <tr><td>M22</td><td>PHPda fayllar bilan ishlash</td><td>2</td></tr>
+          <tr><td>M23</td><td>PHP formasini qayta ishlash</td><td>2</td></tr>
+          <tr><td>M24</td><td>Ruby dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td>M25</td><td>Perl dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td>M26</td><td>Sun’iy intellektga kirish</td><td>2</td></tr>
+          <tr><td>M27</td><td>Sun’iy intellekt texnologiyalari</td><td>2</td></tr>
+          <tr><td>M28</td><td>Sun’iy intellekt platformalaridan foydalanish</td><td>2</td></tr>
+          <tr><td>M29</td><td>Sun’iy intellekt asosida ma’lumotlarni infografik taqdim etish va kontent yaratish</td><td>2</td></tr>
+          <tr><td>M30</td><td>Sun’iy intellekt yordamida ma’lumotlarni tahlil qilish (Data Analyst)</td><td>2</td></tr>
+          <tr><td colspan="2"><strong>Jami (VI semestr)</strong></td><td><strong>30</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-device-laptop"></i> Ta'lim texnologiyalari va metodlari</div>
+        <div class="info-box">
+          <strong>Axborot-kommunikatsiya texnologiyalari (AKT):</strong> Moodle, Google Classroom, Microsoft Teams, Zoom kabi platformalarda masofaviy darslarni tashkil etish; Atom, NotePad, SublimeText kabi script muhitlarda sxemalarni modellashtirish.
+        </div>
+        <div class="info-box">
+          <strong>Loyihalarga asoslangan o'qitish (Project-based learning):</strong> Talabalarga kichik guruhlarda elektron sayt yoki modul ishlab chiqish topshiriqlari berish. Masalan, "Avtomatik hisoblash tizimi", "JavaScript asosida sensorli ekran" kabi loyihalar.
+        </div>
+        <div class="info-box">
+          <strong>Interaktiv metodlar:</strong> Case-study — real sanoat va maishiy elektronika qurilmalaridagi nosozliklarni tahlil qilish; Debat va muhokama — analog va raqamli texnologiyalar afzalliklarini taqqoslash; Brainstorming — yangi sxematik yechimlar va kreativ loyihalarni ishlab chiqish.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-books"></i> Asosiy adabiyotlar</div>
+        <div class="ref-row"><div class="ref-num">1.</div><div class="ref-txt"><strong>J.Boltayev, A.R.Azamatov.</strong> C++asoslari. "Akademnashr" Toshkent 2022. 398 b.</div></div>
+        <div class="ref-row"><div class="ref-num">2.</div><div class="ref-txt"><strong>Salimova H.R.</strong> Obyektga yo'naltirilgan loyihalash va dasturlash 1 (Python dasturlash tilida). "Tahririyot" nashriyoti, 2025, 240 b.</div></div>
+        <div class="ref-row"><div class="ref-num">3.</div><div class="ref-txt"><strong>Robert C. Martin.</strong> The clean coder: A code of conduct for professional programmers. 2024.</div></div>
+        <div class="ref-row"><div class="ref-num">4.</div><div class="ref-txt"><strong>The Ruby Programming Language</strong>, David Flanagan and Yukihiro Matsumoto, O'Reilly Publications.</div></div>
+        <div class="ref-row"><div class="ref-num">5.</div><div class="ref-txt"><strong>Beginning Java Script with Dom scripting and AJAX</strong>, Russ Ferguson, Christian Heilmann, Apress.</div></div>
+        <div class="ref-row"><div class="ref-num">6.</div><div class="ref-txt"><strong>Programming Perl</strong>, Larry Wall, T.Christiansen and J.Orwant, O'Reilly, SPD.</div></div>
+        <div class="ref-row"><div class="ref-num">7.</div><div class="ref-txt"><strong>Open Source Web Development with LAMP</strong> using Linux Apache, MySQL, Perland PHP, J. Lee and B. Ware (Addison Wesley) Pearson Education.</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-world"></i> Axborot manbalari</div>
+        <div class="ref-row"><div class="ref-num">1.</div><div class="ref-txt"><a href="http://www.perl.org/" target="_blank">www.perl.org</a> — PERL rasmiy sayti</div></div>
+        <div class="ref-row"><div class="ref-num">2.</div><div class="ref-txt"><a href="https://www.ruby-lang.org/" target="_blank">www.ruby-lang.org</a> — Ruby rasmiy sayti</div></div>
+        <div class="ref-row"><div class="ref-num">3.</div><div class="ref-txt"><a href="http://www.intuit.ru/" target="_blank">www.intuit.ru</a> — internet universitet, dasturlash bo'yicha yozma va video ma'ruzalar o'qish, test sinovlaridan o'tish va sertifikat olish imkoniyati mavjud</div></div>
+        <div class="ref-row"><div class="ref-num">4.</div><div class="ref-txt"><a href="http://www.ziyonet.uz" target="_blank">www.ziyonet.uz</a> — dasturlash asoslari bo'yicha referatlar topish mumkin</div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SILLABUS ═══════════════ -->
+    <div class="page" id="page-sillabus">
+      <div class="pg-header">
+        <h1>Sillabus</h1>
+        <p>SKRIPT TILLARI fani sillabusi · Kunduzgi ta'lim uchun · Qarshi – 2025</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-clipboard-list"></i> Sillabus fayli</div>
+        <p>Quyidagi oynada sillabus PDF fayli ko‘rinadi. PDF faylni sayt papkasida <strong>assets/pdf/sillabus.pdf</strong> nomi bilan saqlang.</p>
+        <div class="doc-actions">
+          <a class="doc-btn prim" href="assets/pdf/sillabus.pdf" target="_blank"><i class="ti ti-eye"></i> Sillabusni ochish</a>
+          <a class="doc-btn" href="assets/pdf/sillabus.pdf" download><i class="ti ti-download"></i> Yuklab olish</a>
+        </div>
+        <iframe class="pdf-frame" src="assets/pdf/sillabus.pdf"></iframe>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-id-badge"></i> Fan umumiy ma'lumotlari</div>
+        <table class="kv-tbl">
+          <tr><td>Fan nomi</td><td>SCRIPT TILLARI (JavaScript, Python, PHP, Ruby, Perl, Grovy, Bash..)1,2</td></tr>
+          <tr><td>Fan turi</td><td>Majburiy</td></tr>
+          <tr><td>Fan kodi</td><td>ST 1609</td></tr>
+          <tr><td>Yil</td><td>4</td></tr>
+          <tr><td>Semestr</td><td>5-6</td></tr>
+          <tr><td>Ta'lim shakli</td><td>Kunduzgi</td></tr>
+          <tr><td>Ma'ruza / Amaliy mashg'ulotlar</td><td>30/30 · 30/30</td></tr>
+          <tr><td>Mustaqil ta'lim</td><td>150 (90/60)</td></tr>
+          <tr><td>Kredit miqdori</td><td>5/4</td></tr>
+          <tr><td>Baholash shakli</td><td>Imtihon</td></tr>
+          <tr><td>Fan tili</td><td>O'zbek</td></tr>
+          <tr><td>Bilim sohasi</td><td>600000 — Axborot-kommunikatsiya texnologiyalari</td></tr>
+          <tr><td>Ta'lim yo'nalishlari</td><td>60610200 — Axborot tizimlari va texnologiyalari (moliya va bank tizimida)</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-target"></i> Fan maqsadi (FM)</div>
+        <div class="info-box">
+          <strong>FM1:</strong> Talabalarning veb dasturlash sohasidagi asosiy kompetensiyalarini shakllantirish, jumladan, talabalarni veb texnologiya tushunchasi, veb-sayt yaratish asosiy turlari va ularni usullari bilan tanishtirishdan, front-end jarayonlarning algoritmlarni o'zlashtirishdan iborat.
+        </div>
+        <div class="info-box">
+          <strong>FM2:</strong> Talabalarga front-end ta'minotni ishlab chiqish va uning turli bosqichlarida qo'llaniladigan texnologiyalarni, jumladan, front-end sohasida modellashtirish, veb-saytni rasmiylashtirish, loyihalarni algoritmlashtiirsh, front-end ta'minotni amalga oshirish va ilovalarni ishlab chiqish haqida tizimlashtirilgan bilimlarni shakllantirishdan iboratdir. O'qitishda dasturlash tili sifatida JavaScript va PHP script tillaridan foydalaniladi.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-award"></i> Ta'lim natijalari (TN)</div>
+        <div class="sec-head"><i class="ti ti-brain"></i> TN1 — Bilimlar jihatidan</div>
+        <div class="info-box">Script tillari asoslari bo'yicha bilimlar shakllanishi: Talabalar veb-texnologiya tushunchasi, veb-texnologiyalarning asosiy turlari va ularni tuzish usullari bilan tanishadi. Bu orqali ular veb-dasturlash va algoritmlashning nazariy asoslarini o'zlashtiradi, va standart jarayonlar bo'yicha algoritmlarni amalga oshirishga o'rganadi.</div>
+        <div class="sec-head"><i class="ti ti-code"></i> TN2 — Front-end ta'minot ishlab chiqish</div>
+        <div class="info-box">Talabalar front end ta'minotni ishlab chiqish jarayonining turli bosqichlari, jumladan, predmet sohasini modellashtirish, veb-saytni rasmiylashtirish, loyihalarni algoritmlashtiirsh va veb ilovalarni ishlab chiqish bo'yicha tizimli bilimlarni egallaydi.</div>
+        <div class="sec-head"><i class="ti ti-pencil-code"></i> TN3 — Dasturlash ko'nikmalari</div>
+        <div class="info-box">Talabalar JavaScript va PHP dasturlash tillarini o'rganib, samarali va yuqori sifatli kod yozish ko'nikmalarini rivojlantiradi. Ular dasturiy ta'minotni ishlab chiqishda qulay foydalanuvchi interfeyslarini yaratish tamoyillari va dasturiy injiniring standartlari bilan tanishadi.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-calendar-event"></i> Amaliy mashg'ulotlar — V semestr (A1–A15)</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th><th>Soat</th></tr>
+          <tr><td>A1</td><td>Skriptli tillarida dasturlashga kirish</td><td>2</td></tr>
+          <tr><td>A2</td><td>Mijoz qismining dasturlash texnologiyalari</td><td>2</td></tr>
+          <tr><td>A3</td><td>Server qismining dasturlash texnologiyalari</td><td>2</td></tr>
+          <tr><td>A4</td><td>JavaScriptdan foydalanish imkoniyatlari</td><td>2</td></tr>
+          <tr><td>A5</td><td>JS da massivlar va lug'atlar</td><td>2</td></tr>
+          <tr><td>A6</td><td>JS da funktsiyalardan foydalanish</td><td>2</td></tr>
+          <tr><td>A7</td><td>JS asosiy kutubxonalari va freymvorklari</td><td>2</td></tr>
+          <tr><td>A8</td><td>JavaScript obyektlari</td><td>2</td></tr>
+          <tr><td>A9</td><td>JavaScript sinflari</td><td>2</td></tr>
+          <tr><td>A10</td><td>JS da prototiplar</td><td>2</td></tr>
+          <tr><td>A11</td><td>JavaScript JSON</td><td>2</td></tr>
+          <tr><td>A12</td><td>JavaScript HTML DOM</td><td>2</td></tr>
+          <tr><td>A13</td><td>JavaScript oyna-brauzerining ob'ekt modeli (BOM)</td><td>2</td></tr>
+          <tr><td>A14</td><td>Ruby dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td>A15</td><td>Perl dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td colspan="2"><strong>Jami</strong></td><td><strong>30</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-calendar-event"></i> Amaliy mashg'ulotlar — VI semestr (A16–A30)</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th><th>Soat</th></tr>
+          <tr><td>A16</td><td>PHP: ma&#x27;lumotlar turlari, o&#x27;zgaruvchilar, operatorlar, shartli bayonotlar</td><td>2</td></tr>
+          <tr><td>A17</td><td>PHP: sikllar va massivlar</td><td>2</td></tr>
+          <tr><td>A18</td><td>PHP: Indekslangan massiv, assotsiativ massiv</td><td>2</td></tr>
+          <tr><td>A19</td><td>PHP: satr funksiyalari, funksiyalar-parametrlangan funksiya</td><td>2</td></tr>
+          <tr><td>A20</td><td>PHP: qiymat bo&#x27;yicha qo&#x27;ng&#x27;iroq qilish</td><td>2</td></tr>
+          <tr><td>A21</td><td>PHPda hammasini mos yozuvlar bo&#x27;yicha qilish</td><td>2</td></tr>
+          <tr><td>A22</td><td>PHPda fayllar bilan ishlash</td><td>2</td></tr>
+          <tr><td>A23</td><td>PHP formasini qayta ishlash</td><td>2</td></tr>
+          <tr><td>A24</td><td>Ruby dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td>A25</td><td>Perl dasturlash tili asoslari</td><td>2</td></tr>
+          <tr><td>A26</td><td>Sun’iy intellektga kirish</td><td>2</td></tr>
+          <tr><td>A27</td><td>Sun’iy intellekt texnologiyalari</td><td>2</td></tr>
+          <tr><td>A28</td><td>Sun’iy intellekt platformalaridan foydalanish</td><td>2</td></tr>
+          <tr><td>A29</td><td>Sun’iy intellekt asosida ma’lumotlarni infografik taqdim etish va kontent yaratish</td><td>2</td></tr>
+          <tr><td>A30</td><td>Sun’iy intellekt yordamida ma’lumotlarni tahlil qilish (Data Analyst)</td><td>2</td></tr>
+          <tr><td colspan="2"><strong>Jami</strong></td><td><strong>30</strong></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-chart-bar"></i> Baholash tizimi</div>
+        <table class="tbl">
+          <tr><th>Nazorat turi</th><th>Ball</th><th>Izoh</th></tr>
+          <tr><td>Joriy nazorat (JN)</td><td>30 ball</td><td>Amaliy va mustaqil ishlar</td></tr>
+          <tr><td>Oraliq nazorat 1 (ON)</td><td>0–14 ball</td><td>O'quv semestrining 8-haftasi</td></tr>
+          <tr><td>Oraliq nazorat 2 (ON)</td><td>0–16 ball</td><td>O'quv semestrning 15-haftasi</td></tr>
+          <tr><td><strong>Jami mustaqil ta'lim</strong></td><td><strong>0–30 ball</strong></td><td></td></tr>
+          <tr><td>Yakuniy nazorat (imtihon)</td><td>40 ball</td><td>Semestr oxiri</td></tr>
+          <tr><td><strong>Umumiy</strong></td><td><strong>100 ball</strong></td><td></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-user"></i> Fan o'qituvchisi to'g'risida ma'lumot</div>
+        <table class="kv-tbl">
+          <tr><td>Muallif</td><td>Xaqberdiyev Asliddin Imomnazar o'g'li</td></tr>
+          <tr><td>E-mail</td><td>haqberdiyevasliddin@gmail.com</td></tr>
+          <tr><td>Tashkilot</td><td>Iqtisodiyot va pedagogika universiteti, Kompyuter tizimlari kafedrasi</td></tr>
+          <tr><td>Tashqi taqrizchi</td><td>Q.R. Zohirov — Qarshi davlat texnika universiteti "Kompyuter tizimlarining dasturiy va texnika ta'minoti" kafedrasi mudiri Dots.</td></tr>
+          <tr><td>Ichki taqrizchi</td><td>A.M. Turg'unov — Iqtisodiyot va pedagogika universiteti "Kompyuter tizimlari" kafedrasi v.b. professor</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ MA'RUZALAR ═══════════════ -->
+    <div class="page" id="page-lecture">
+      <div class="pg-header">
+        <h1>Ma'ruzalar</h1>
+        <p>Fan dasturi va sillabus asosida V va VI semestr ma'ruza mavzulari</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-brand-javascript"></i> V semestr — Ma'ruza mavzulari (M1–M15)</div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M1</div><div><div class="row-title">Skriptli tillarida dasturlashga kirish</div><div class="row-sub">Skript tillarining mazmuni, qo‘llanish sohasi va web dasturlashdagi o‘rni. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M2</div><div><div class="row-title">Mijoz qismining dasturlash texnologiyalari</div><div class="row-sub">Client-side dasturlash, brauzerda bajariladigan skriptlar va UI interaktivligi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M3</div><div><div class="row-title">Server qismining dasturlash texnologiyalari</div><div class="row-sub">Server-side dasturlash, so‘rov-javob modeli va backend texnologiyalar. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M4</div><div><div class="row-title">JavaScriptdan foydalanish imkoniyatlari</div><div class="row-sub">JavaScript sintaksisi, ma’lumot turlari va web sahifada qo‘llash usullari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M5</div><div><div class="row-title">JS da massivlar va lug&#x27;atlar</div><div class="row-sub">Massiv, lug‘at, elementlarga murojaat qilish va amaliy ishlash usullari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M6</div><div><div class="row-title">JS da funktsiyalardan foydalanish</div><div class="row-sub">Funksiya yaratish, parametrlar, qayta foydalaniladigan kod bloklari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M7</div><div><div class="row-title">JS asosiy kutubxonalari va freymvorklari</div><div class="row-sub">React, JQuery, AngularJS, Vue.js kabi kutubxona va freymvorklar haqida tushuncha. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M8</div><div><div class="row-title">JavaScript obyektlari</div><div class="row-sub">Obyekt, xossa, metod va obyektga murojaat qilish tamoyillari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M9</div><div><div class="row-title">JavaScript sinflari</div><div class="row-sub">Class sintaksisi, konstruktor va metodlar yordamida obyekt yaratish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M10</div><div><div class="row-title">JS da prototiplar</div><div class="row-sub">Prototype mexanizmi, meros olish va obyektlar zanjiri. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M11</div><div><div class="row-title">JavaScript JSON</div><div class="row-sub">JSON formati, obyekt va matn ko‘rinishidagi ma’lumot almashinuvi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M12</div><div><div class="row-title">JavaScript HTML DOM</div><div class="row-sub">DOM modeli, HTML elementlarini tanlash va JavaScript orqali o‘zgartirish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">M13</div><div><div class="row-title">JavaScript oyna-brauzerining ob&#x27;ekt modeli (BOM)</div><div class="row-sub">BOM, window obyekti, alert, confirm, prompt, timer va cookie tushunchalari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-teal" style="font-size:11px;font-weight:700">M14</div><div><div class="row-title">Ruby dasturlash tili asoslari</div><div class="row-sub">Ruby tili sintaksisi, asosiy strukturasi va oddiy dasturlar yaratish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">M15</div><div><div class="row-title">Perl dasturlash tili asoslari</div><div class="row-sub">Perl tili sintaksisi, umumiy funksiyalar va skript tuzilishi. <span class="badge b-blue">2 soat</span></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-server"></i> VI semestr — Ma'ruza mavzulari (M16–M30)</div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M16</div><div><div class="row-title">PHP: ma&#x27;lumotlar turlari, o&#x27;zgaruvchilar, operatorlar, shartli bayonotlar</div><div class="row-sub">PHP sintaksisi, o‘zgaruvchilar, ma’lumot turlari, operatorlar va shartlar. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M17</div><div><div class="row-title">PHP: sikllar va massivlar</div><div class="row-sub">for, while, foreach sikllari va massivlar bilan ishlash. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M18</div><div><div class="row-title">PHP: Indekslangan massiv, assotsiativ massiv</div><div class="row-sub">Indekslangan va assotsiativ massivlar, kalit-qiymat juftligi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M19</div><div><div class="row-title">PHP: satr funksiyalari, funksiyalar-parametrlangan funksiya</div><div class="row-sub">Satr funksiyalari, funksiya yaratish va parametrli funksiyalar. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M20</div><div><div class="row-title">PHP: qiymat bo&#x27;yicha qo&#x27;ng&#x27;iroq qilish</div><div class="row-sub">Qiymat bo‘yicha parametr uzatish va funksiyada undan foydalanish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M21</div><div><div class="row-title">PHPda hammasini mos yozuvlar bo&#x27;yicha qilish</div><div class="row-sub">Reference tushunchasi va mos yozuvlar orqali ma’lumotni boshqarish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M22</div><div><div class="row-title">PHPda fayllar bilan ishlash</div><div class="row-sub">Fayl ochish, yozish, o‘qish va yopish amallari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">M23</div><div><div class="row-title">PHP formasini qayta ishlash</div><div class="row-sub">HTML forma ma’lumotlarini PHP orqali qabul qilish va tekshirish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-teal" style="font-size:11px;font-weight:700">M24</div><div><div class="row-title">Ruby dasturlash tili asoslari</div><div class="row-sub">Ruby dasturlash tilining umumiy asoslari va sodda amaliy qo‘llanishi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-teal" style="font-size:11px;font-weight:700">M25</div><div><div class="row-title">Perl dasturlash tili asoslari</div><div class="row-sub">Perl dasturlash tilining asosiy imkoniyatlari va skript yozish tamoyillari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">M26</div><div><div class="row-title">Sun’iy intellektga kirish</div><div class="row-sub">Sun’iy intellekt tushunchasi, vazifalari va dasturlashdagi qo‘llanish yo‘nalishlari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">M27</div><div><div class="row-title">Sun’iy intellekt texnologiyalari</div><div class="row-sub">Sun’iy intellekt texnologiyalari, modellari va amaliy platformalar bilan bog‘liqligi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">M28</div><div><div class="row-title">Sun’iy intellekt platformalaridan foydalanish</div><div class="row-sub">AI platformalaridan foydalanish, prompt berish va natijalarni tahlil qilish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">M29</div><div><div class="row-title">Sun’iy intellekt asosida ma’lumotlarni infografik taqdim etish va kontent yaratish</div><div class="row-sub">AI yordamida kontent, grafik va infografik materiallar tayyorlash. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">M30</div><div><div class="row-title">Sun’iy intellekt yordamida ma’lumotlarni tahlil qilish (Data Analyst)</div><div class="row-sub">AI yordamida ma’lumotlarni tahlil qilish, Data Analyst faoliyati asoslari. <span class="badge b-blue">2 soat</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ AMALIY ═══════════════ -->
+    <div class="page" id="page-lab">
+      <div class="pg-header">
+        <h1>Amaliy ishlar</h1>
+        <p>Fan dasturi va sillabus asosida V va VI semestr amaliy mashg'ulot mavzulari</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-terminal-2"></i> V semestr — Amaliy mashg'ulotlar (A1–A15)</div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A1</div><div><div class="row-title">Skriptli tillarida dasturlashga kirish</div><div class="row-sub">Skript tillarining mazmuni, qo‘llanish sohasi va web dasturlashdagi o‘rni. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A2</div><div><div class="row-title">Mijoz qismining dasturlash texnologiyalari</div><div class="row-sub">Client-side dasturlash, brauzerda bajariladigan skriptlar va UI interaktivligi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A3</div><div><div class="row-title">Server qismining dasturlash texnologiyalari</div><div class="row-sub">Server-side dasturlash, so‘rov-javob modeli va backend texnologiyalar. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A4</div><div><div class="row-title">JavaScriptdan foydalanish imkoniyatlari</div><div class="row-sub">JavaScript sintaksisi, ma’lumot turlari va web sahifada qo‘llash usullari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A5</div><div><div class="row-title">JS da massivlar va lug&#x27;atlar</div><div class="row-sub">Massiv, lug‘at, elementlarga murojaat qilish va amaliy ishlash usullari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A6</div><div><div class="row-title">JS da funktsiyalardan foydalanish</div><div class="row-sub">Funksiya yaratish, parametrlar, qayta foydalaniladigan kod bloklari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A7</div><div><div class="row-title">JS asosiy kutubxonalari va freymvorklari</div><div class="row-sub">React, JQuery, AngularJS, Vue.js kabi kutubxona va freymvorklar haqida tushuncha. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A8</div><div><div class="row-title">JavaScript obyektlari</div><div class="row-sub">Obyekt, xossa, metod va obyektga murojaat qilish tamoyillari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A9</div><div><div class="row-title">JavaScript sinflari</div><div class="row-sub">Class sintaksisi, konstruktor va metodlar yordamida obyekt yaratish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A10</div><div><div class="row-title">JS da prototiplar</div><div class="row-sub">Prototype mexanizmi, meros olish va obyektlar zanjiri. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A11</div><div><div class="row-title">JavaScript JSON</div><div class="row-sub">JSON formati, obyekt va matn ko‘rinishidagi ma’lumot almashinuvi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A12</div><div><div class="row-title">JavaScript HTML DOM</div><div class="row-sub">DOM modeli, HTML elementlarini tanlash va JavaScript orqali o‘zgartirish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-blue" style="font-size:11px;font-weight:700">A13</div><div><div class="row-title">JavaScript oyna-brauzerining ob&#x27;ekt modeli (BOM)</div><div class="row-sub">BOM, window obyekti, alert, confirm, prompt, timer va cookie tushunchalari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-teal" style="font-size:11px;font-weight:700">A14</div><div><div class="row-title">Ruby dasturlash tili asoslari</div><div class="row-sub">Ruby tili sintaksisi, asosiy strukturasi va oddiy dasturlar yaratish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">A15</div><div><div class="row-title">Perl dasturlash tili asoslari</div><div class="row-sub">Perl tili sintaksisi, umumiy funksiyalar va skript tuzilishi. <span class="badge b-blue">2 soat</span></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-terminal-2"></i> VI semestr — Amaliy mashg'ulotlar (A16–A30)</div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A16</div><div><div class="row-title">PHP: ma&#x27;lumotlar turlari, o&#x27;zgaruvchilar, operatorlar, shartli bayonotlar</div><div class="row-sub">PHP sintaksisi, o‘zgaruvchilar, ma’lumot turlari, operatorlar va shartlar. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A17</div><div><div class="row-title">PHP: sikllar va massivlar</div><div class="row-sub">for, while, foreach sikllari va massivlar bilan ishlash. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A18</div><div><div class="row-title">PHP: Indekslangan massiv, assotsiativ massiv</div><div class="row-sub">Indekslangan va assotsiativ massivlar, kalit-qiymat juftligi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A19</div><div><div class="row-title">PHP: satr funksiyalari, funksiyalar-parametrlangan funksiya</div><div class="row-sub">Satr funksiyalari, funksiya yaratish va parametrli funksiyalar. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A20</div><div><div class="row-title">PHP: qiymat bo&#x27;yicha qo&#x27;ng&#x27;iroq qilish</div><div class="row-sub">Qiymat bo‘yicha parametr uzatish va funksiyada undan foydalanish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A21</div><div><div class="row-title">PHPda hammasini mos yozuvlar bo&#x27;yicha qilish</div><div class="row-sub">Reference tushunchasi va mos yozuvlar orqali ma’lumotni boshqarish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A22</div><div><div class="row-title">PHPda fayllar bilan ishlash</div><div class="row-sub">Fayl ochish, yozish, o‘qish va yopish amallari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-green" style="font-size:11px;font-weight:700">A23</div><div><div class="row-title">PHP formasini qayta ishlash</div><div class="row-sub">HTML forma ma’lumotlarini PHP orqali qabul qilish va tekshirish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-teal" style="font-size:11px;font-weight:700">A24</div><div><div class="row-title">Ruby dasturlash tili asoslari</div><div class="row-sub">Ruby dasturlash tilining umumiy asoslari va sodda amaliy qo‘llanishi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-teal" style="font-size:11px;font-weight:700">A25</div><div><div class="row-title">Perl dasturlash tili asoslari</div><div class="row-sub">Perl dasturlash tilining asosiy imkoniyatlari va skript yozish tamoyillari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">A26</div><div><div class="row-title">Sun’iy intellektga kirish</div><div class="row-sub">Sun’iy intellekt tushunchasi, vazifalari va dasturlashdagi qo‘llanish yo‘nalishlari. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">A27</div><div><div class="row-title">Sun’iy intellekt texnologiyalari</div><div class="row-sub">Sun’iy intellekt texnologiyalari, modellari va amaliy platformalar bilan bog‘liqligi. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">A28</div><div><div class="row-title">Sun’iy intellekt platformalaridan foydalanish</div><div class="row-sub">AI platformalaridan foydalanish, prompt berish va natijalarni tahlil qilish. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">A29</div><div><div class="row-title">Sun’iy intellekt asosida ma’lumotlarni infografik taqdim etish va kontent yaratish</div><div class="row-sub">AI yordamida kontent, grafik va infografik materiallar tayyorlash. <span class="badge b-blue">2 soat</span></div></div></div>
+        <div class="row"><div class="icon-box ib-amber" style="font-size:11px;font-weight:700">A30</div><div><div class="row-title">Sun’iy intellekt yordamida ma’lumotlarni tahlil qilish (Data Analyst)</div><div class="row-sub">AI yordamida ma’lumotlarni tahlil qilish, Data Analyst faoliyati asoslari. <span class="badge b-blue">2 soat</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ MUSTAQIL ISHLAR ═══════════════ -->
+    <div class="page" id="page-selfwork">
+      <div class="pg-header">
+        <h1>Mustaqil ishlar</h1>
+        <p>V va VI semestr mustaqil ta'lim mavzulari (sillabus asosida)</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-pencil"></i> V Semestr mustaqil ish mavzulari</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th><th>Topshirish shakli</th><th>Soat</th></tr>
+          <tr><td>MT1</td><td>Skriptli dasturlash tillarining asosiy bazaviy konstruksiyalari</td><td>Referatni bajarish</td><td>5</td></tr>
+          <tr><td>MT2</td><td>JavaScript ssenariy tili. Asosiy konstruksiyalar. DOM modeli</td><td>Mavzu yuzasidan tahliliy ma'lumot tayyorlash</td><td>5</td></tr>
+          <tr><td>MT3</td><td>JavaScript ssenariy tili. Asosiy konstruksiyalar. Voqealar</td><td>Berilgan mavzuni chuqur o'rganish va yuqori darajada tahlil qilish</td><td>5</td></tr>
+          <tr><td>MT4</td><td>Pythonda Sinflar va ob'ektlar</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>5</td></tr>
+          <tr><td>MT5</td><td>Pythonda Funksiyalar</td><td>Nazariy tahliliy ma'lumot tayyorlash. Testlashga doir dastur yaratish</td><td>5</td></tr>
+          <tr><td>MT6</td><td>Pythonda Fayllar</td><td>Berilgan mavzuni chuqur o'rganish va yuqori darajada tahlil qilish</td><td>5</td></tr>
+          <tr><td>MT7</td><td>JavaScriptga kirish</td><td>Berilgan mavzuni chuqur o'rganish va yuqori darajada tahlil qilish</td><td>5</td></tr>
+          <tr><td>MT8</td><td>JavaScript ma'lumotlar turlari va o'zgaruvchilari</td><td>Berilgan mavzuni chuqur o'rganish va yuqori darajada tahlil qilish</td><td>5</td></tr>
+          <tr><td>MT9</td><td>JavaScript operatorlari</td><td>Referatni bajarish</td><td>5</td></tr>
+          <tr><td>MT10</td><td>JavaScript funktsiyasi</td><td>Mavzu yuzasidan tahliliy ma'lumot tayyorlash</td><td>5</td></tr>
+          <tr><td>MT11</td><td>JavaScriptdagi ob'ektlar</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT12</td><td>JavaScriptdagi shakllar</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT13</td><td>HTML bilan tanishtirish</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT14</td><td>HTML da kodlar bilan ishlash</td><td>Amaliyotdagi mavjud muammoning yechimini topish, topshiriq va munozarali savollar tayyorlash</td><td>4</td></tr>
+          <tr><td>MT15</td><td>Pythonda Interaktiv buyruq qatori</td><td>Mavzu yuzasidan tahliliy ma'lumot tayyorlash</td><td>4</td></tr>
+          <tr><td>MT16</td><td>Pythonda Buyruqlar qatori skripti</td><td>Mavzu yuzasidan tahliliy ma'lumot tayyorlash</td><td>4</td></tr>
+          <tr><td>MT17</td><td>Pythonda PyCharm Pro yuklab olish va o'matish</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT18</td><td>Pythonda Ketma-ket tanlashni takrorlash</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT19</td><td>Scripting dvigatellarining ishlashi</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT20</td><td>Shell Scriptlari</td><td>Amaliyotdagi mavjud muammoning yechimini topish, topshiriq va munozarali savollar tayyorlash</td><td>4</td></tr>
+          <tr><td colspan="3"><strong>Jami</strong></td><td><strong>90</strong></td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-pencil"></i> VI Semestr mustaqil ish mavzulari</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th><th>Topshirish shakli</th><th>Soat</th></tr>
+          <tr><td>MT1</td><td>JavaScriptga kirish</td><td>Referatni bajarish</td><td>4</td></tr>
+          <tr><td>MT2</td><td>JavaScript ma'lumotlar turlari va o'zgaruvchilari</td><td>Mavzu yuzasidan tahliliy ma'lumot tayyorlash</td><td>4</td></tr>
+          <tr><td>MT3</td><td>JavaScript operatorlari</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT4</td><td>JavaScript funktsiyasi</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT5</td><td>Pythonda Ob'ektga yo'naltirish</td><td>Nazariy tahliliy ma'lumot tayyorlash</td><td>4</td></tr>
+          <tr><td>MT6</td><td>Pythonda O'zgaruvchilar</td><td>Amaliyotdagi mavjud muammoning yechimini topish</td><td>4</td></tr>
+          <tr><td>MT7</td><td>JavaScript operatorlari</td><td>Domen talablarini ishlab chiqib, taqdimot tayyorlash</td><td>4</td></tr>
+          <tr><td>MT8</td><td>Kichik loyihalar algorimlarini yozish usullari</td><td>Berilgan mavzuni chuqur o'rganish va yuqori darajada tahlil qilish</td><td>4</td></tr>
+          <tr><td>MT9</td><td>Ma'lumotlarni eksport qilish vositalari va komponentalari</td><td>Referatni bajarish</td><td>4</td></tr>
+          <tr><td>MT10</td><td>Testlash va instruksiya yozish usullari</td><td>Berilgan mavzuni chuqur o'rganish va yuqori darajada tahlil qilish</td><td>4</td></tr>
+          <tr><td>MT11</td><td>Ruby dasturlash tili. Metaprogrammarlash asoslari</td><td>Referatni bajarish</td><td>4</td></tr>
+          <tr><td>MT12</td><td>Ruby dasturlash tili. Obyektga yo'naltirilgan dasturlashning dinamik mexanizmlari va asoslari</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT13</td><td>PERL dasturlash tili. Kiritilgan ma'lumotlar turlari. Kichik dasturlar va modullar</td><td>Aniq mavzu bo'yicha tahliliy taqdimot (prezentatsiya) tayyorlash</td><td>4</td></tr>
+          <tr><td>MT14</td><td>PERL dasturlash tili. PERL da obyektga yo'naltirilgan dasturlash va web dasturlash asoslari</td><td>Amaliyotdagi mavjud muammoning yechimini topish, topshiriq va munozarali savollar tayyorlash</td><td>4</td></tr>
+          <tr><td>MT15</td><td>CSS ning vazifasi va qo'llanilishi. CSS sintaksisi</td><td>Mavzu yuzasidan tahliliy ma'lumot tayyorlash</td><td>4</td></tr>
+          <tr><td colspan="3"><strong>Jami</strong></td><td><strong>60</strong></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ KURS ISHI ═══════════════ -->
+    <div class="page" id="page-course">
+      <div class="pg-header">
+        <h1>Kurs ishi (loyihasi)</h1>
+        <p>VI semestr kurs ishi mavzulari — sillabus asosida</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-award"></i> JavaScript asosidagi kurs ishlari (K1–K15)</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th></tr>
+          <tr><td>K1</td><td>JavaScript yordamida kalkulyator dasturi yaratish</td></tr>
+          <tr><td>K2</td><td>JavaScriptda soat va taqvim dasturi ishlab chiqish</td></tr>
+          <tr><td>K3</td><td>JavaScript asosida "To-do list" (vazifalar ro'yxati) ilovasi</td></tr>
+          <tr><td>K4</td><td>JavaScript yordamida slayder va galereya yaratish</td></tr>
+          <tr><td>K5</td><td>JavaScript orqali oddiy onlayn o'yin ("Guess the number", "Snake" va h.k.)</td></tr>
+          <tr><td>K6</td><td>JavaScript yordamida foydalanuvchi ro'yxatdan o'tishi va ma'lumotlarini saqlash</td></tr>
+          <tr><td>K7</td><td>JavaScriptda matn tahrirlovchi mini-editor ishlab chiqish</td></tr>
+          <tr><td>K8</td><td>JavaScript yordamida API'dan ob-havo ma'lumotlarini chiqarish</td></tr>
+          <tr><td>K9</td><td>JavaScript asosida interaktiv test yoki viktorina dasturi</td></tr>
+          <tr><td>K10</td><td>JavaScript orqali animatsiyali menyu va UI elementlar yaratish</td></tr>
+          <tr><td>K11</td><td>JavaScriptda real vaqtli chat ilovasi (WebSocket orqali)</td></tr>
+          <tr><td>K12</td><td>JavaScript yordamida mini-grafik chizish dasturi (Canvas API)</td></tr>
+          <tr><td>K13</td><td>JavaScript orqali drag-and-drop fayl yuklash tizimi</td></tr>
+          <tr><td>K14</td><td>JavaScript yordamida onlayn kalkulyator (valyuta konvertori)</td></tr>
+          <tr><td>K15</td><td>JavaScript asosida mini o'yin: Tic-Tac-Toe yoki Sudoku</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-server"></i> PHP va MySQL asosidagi kurs ishlari (K16–K30)</div>
+        <table class="tbl">
+          <tr><th>#</th><th>Mavzu</th></tr>
+          <tr><td>K16</td><td>PHP va MySQL asosida foydalanuvchi ro'yxatga olish va login tizimi</td></tr>
+          <tr><td>K17</td><td>PHP orqali kontakt forma yaratish va email jo'natish</td></tr>
+          <tr><td>K18</td><td>PHP yordamida CRUD (Create, Read, Update, Delete) amaliyoti</td></tr>
+          <tr><td>K19</td><td>PHP asosida oddiy blog tizimi yaratish</td></tr>
+          <tr><td>K20</td><td>PHP va MySQL yordamida onlayn kitob do'koni loyihasi</td></tr>
+          <tr><td>K21</td><td>PHP orqali foto-galereya sayti ishlab chiqish</td></tr>
+          <tr><td>K22</td><td>PHP asosida mini-forum yoki izohlar bo'limi</td></tr>
+          <tr><td>K23</td><td>PHP yordamida onlayn ovoz berish (poll) tizimi</td></tr>
+          <tr><td>K24</td><td>PHP asosida oddiy e-commerce savatcha (shopping cart) yaratish</td></tr>
+          <tr><td>K25</td><td>PHP va AJAX yordamida real vaqtli qidiruv tizimi</td></tr>
+          <tr><td>K26</td><td>PHP orqali parolni tiklash tizimi (email orqali)</td></tr>
+          <tr><td>K27</td><td>PHP yordamida admin panel va foydalanuvchi boshqaruvi</td></tr>
+          <tr><td>K28</td><td>PHP asosida to'lov tizimi (soxta payment gateway integratsiyasi)</td></tr>
+          <tr><td>K29</td><td>PHP orqali online test tizimi (savollar va natija hisoblash)</td></tr>
+          <tr><td>K30</td><td>PHP yordamida onlayn rezervatsiya tizimi (masalan, mehmonxona yoki kino uchun)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ GLOSSARIY ═══════════════ -->
+    <div class="page" id="page-glossary">
+      <div class="pg-header">
+        <h1>Glossariy</h1>
+        <p>Script tillari bo'yicha asosiy atamalar va ta'riflar lug'ati</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-vocabulary"></i> Asosiy atamalar</div>
+        <div class="g-item"><div class="g-term">Array (Massiv)</div><div class="g-def">Ko'p qiymatlarni tartibli saqlash uchun ishlatiladigan ma'lumotlar tuzilmasi. JavaScript'da: <code>let arr = [1, 2, 3]</code></div></div>
+        <div class="g-item"><div class="g-term">Async / Await</div><div class="g-def">Asinxron funksiyalarni sinxron ko'rinishda yozish imkonini beruvchi JavaScript sintaksisi. <code>async function</code> kalit so'zi bilan e'lon qilinadi.</div></div>
+        <div class="g-item"><div class="g-term">BOM (Browser Object Model)</div><div class="g-def">Brauzer oynasi bilan ishlash imkonini beruvchi ob'ektlar modeli. Window, Navigator, Screen, History ob'ektlarini o'z ichiga oladi.</div></div>
+        <div class="g-item"><div class="g-term">Callback</div><div class="g-def">Boshqa funksiya argumenti sifatida uzatiladigan va keyinchalik chaqiriladigan funksiya.</div></div>
+        <div class="g-item"><div class="g-term">Closure (Yopilish)</div><div class="g-def">Ichki funksiyaning tashqi funksiya o'zgaruvchilariga kirishini saqlash xususiyati.</div></div>
+        <div class="g-item"><div class="g-term">DOM (Document Object Model)</div><div class="g-def">HTML hujjatini ob'ektlar daraxti sifatida ifodalovchi brauzer interfeysli model. JavaScript orqali o'zgartiriladi.</div></div>
+        <div class="g-item"><div class="g-term">Event (Voqea)</div><div class="g-def">Foydalanuvchi harakati yoki brauzer tomonidan ishga tushuriladigan signal (klik, tugma bosish va boshqalar).</div></div>
+        <div class="g-item"><div class="g-term">Function (Funksiya)</div><div class="g-def">Ma'lum vazifani bajaruvchi, qayta foydalanish mumkin bo'lgan kod bloki.</div></div>
+        <div class="g-item"><div class="g-term">Interpreter (Tarjimon)</div><div class="g-def">Kodni kompilyatsiyasiz, qator-qator bajaradigan dastur. Script tillarida keng qo'llaniladi.</div></div>
+        <div class="g-item"><div class="g-term">JSON (JavaScript Object Notation)</div><div class="g-def">Ma'lumotlarni almashish uchun keng qo'llaniladigan yengil format. Kalit-qiymat juftliklari asosida ishlaydi.</div></div>
+        <div class="g-item"><div class="g-term">Module (Modul)</div><div class="g-def">Alohida fayl yoki kod birligi bo'lib, <code>import/export</code> orqali boshqa fayllarda ishlatiladi.</div></div>
+        <div class="g-item"><div class="g-term">PHP (Hypertext Preprocessor)</div><div class="g-def">Server tomonida ishlaydigan umumiy maqsadli script tili. Asosan veb-dasturlashda keng qo'llaniladi.</div></div>
+        <div class="g-item"><div class="g-term">Promise</div><div class="g-def">Asinxron amalning kelajakdagi natijasini ifodalovchi JavaScript ob'ekti. Uch holati bor: pending, fulfilled, rejected.</div></div>
+        <div class="g-item"><div class="g-term">Prototype (Prototip)</div><div class="g-def">JavaScript'da ob'ektlar meros olish mexanizmi. Har bir ob'ektning __proto__ xossasi mavjud.</div></div>
+        <div class="g-item"><div class="g-term">Ruby</div><div class="g-def">Dinamik, ob'ektga yo'naltirilgan va umumiy maqsadli dasturlash tili. Yukihiro Matsumoto tomonidan yaratilgan.</div></div>
+        <div class="g-item"><div class="g-term">Scope (Qamrov)</div><div class="g-def">O'zgaruvchi yoki funksiya qaysi kod sohasida ko'rinishi mumkinligini belgilovchi tushuncha.</div></div>
+        <div class="g-item"><div class="g-term">Script tili</div><div class="g-def">Odatda interpretatsiya qilinuvchi, tez yoziluvchi va avtomatlashtirish uchun mo'ljallangan dasturlash tili.</div></div>
+        <div class="g-item"><div class="g-term">Variable (O'zgaruvchi)</div><div class="g-def">Ma'lumotlarni saqlash uchun ajratilgan xotira maydoni. JS'da <code>var</code>, <code>let</code>, <code>const</code> bilan e'lon qilinadi.</div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ TESTLAR ═══════════════ -->
+    <div class="page" id="page-tests">
+      <div class="pg-header">
+        <h1>Testlar</h1>
+        <p>Nazorat testlari va viktorinalar</p>
+      </div>
+      <div class="test-card"><div class="test-info"><div class="test-name">1-mavzu: Skript tillariga kirish testi</div><div class="test-meta">20 savol &nbsp;·&nbsp; 20 daqiqa &nbsp;·&nbsp; <span class="badge b-green">Ochiq</span></div></div><button class="btn-play"><i class="ti ti-player-play"></i> Boshlash</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">2-mavzu: Mijoz va server qismi texnologiyalari</div><div class="test-meta">20 savol &nbsp;·&nbsp; 20 daqiqa &nbsp;·&nbsp; <span class="badge b-green">Ochiq</span></div></div><button class="btn-play"><i class="ti ti-player-play"></i> Boshlash</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">3-mavzu: JavaScript asoslari testi</div><div class="test-meta">25 savol &nbsp;·&nbsp; 25 daqiqa &nbsp;·&nbsp; <span class="badge b-green">Ochiq</span></div></div><button class="btn-play"><i class="ti ti-player-play"></i> Boshlash</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">1-Oraliq nazorat testi (M1–M7)</div><div class="test-meta">40 savol &nbsp;·&nbsp; 60 daqiqa &nbsp;·&nbsp; <span class="badge b-amber">8-hafta</span></div></div><button class="btn-play" disabled><i class="ti ti-lock"></i> Yopiq</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">JS Obyektlar, Sinflari, Prototiplar testi</div><div class="test-meta">25 savol &nbsp;·&nbsp; 25 daqiqa &nbsp;·&nbsp; <span class="badge b-amber">Tez kunda</span></div></div><button class="btn-play" disabled><i class="ti ti-lock"></i> Yopiq</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">Ruby va Perl asoslari testi</div><div class="test-meta">20 savol &nbsp;·&nbsp; 20 daqiqa &nbsp;·&nbsp; <span class="badge b-coral">Kutilmoqda</span></div></div><button class="btn-play" disabled><i class="ti ti-lock"></i> Yopiq</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">2-Oraliq nazorat testi (M8–M15)</div><div class="test-meta">40 savol &nbsp;·&nbsp; 60 daqiqa &nbsp;·&nbsp; <span class="badge b-coral">15-hafta</span></div></div><button class="btn-play" disabled><i class="ti ti-lock"></i> Yopiq</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">PHP to'liq kurs testi</div><div class="test-meta">30 savol &nbsp;·&nbsp; 30 daqiqa &nbsp;·&nbsp; <span class="badge b-coral">Kutilmoqda</span></div></div><button class="btn-play" disabled><i class="ti ti-lock"></i> Yopiq</button></div>
+      <div class="test-card"><div class="test-info"><div class="test-name">Yakuniy nazorat testi (barcha mavzular)</div><div class="test-meta">60 savol &nbsp;·&nbsp; 90 daqiqa &nbsp;·&nbsp; <span class="badge b-coral">Semestr oxiri</span></div></div><button class="btn-play" disabled><i class="ti ti-lock"></i> Yopiq</button></div>
+    </div>
+
+    <!-- ═══════════════ ADABIYOTLAR ═══════════════ -->
+    <div class="page" id="page-references">
+      <div class="pg-header">
+        <h1>Foydalanilgan adabiyotlar</h1>
+        <p>Script tillari fanini o‘qitishda foydalaniladigan asosiy va qo‘shimcha manbalar</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-books"></i> Asosiy adabiyotlar</div>
+        <div class="ref-row"><div class="ref-num">1.</div><div class="ref-txt"><strong>J.Boltayev, A.R.Azamatov.</strong> C++ asoslari. "Akademnashr", Toshkent, 2022. 398 b.</div></div>
+        <div class="ref-row"><div class="ref-num">2.</div><div class="ref-txt"><strong>Salimova H.R.</strong> Obyektga yo‘naltirilgan loyihalash va dasturlash 1 (Python dasturlash tilida). "Tahririyot" nashriyoti, 2025. 240 b.</div></div>
+        <div class="ref-row"><div class="ref-num">3.</div><div class="ref-txt"><strong>Robert C. Martin.</strong> The Clean Coder: A Code of Conduct for Professional Programmers.</div></div>
+        <div class="ref-row"><div class="ref-num">4.</div><div class="ref-txt"><strong>David Flanagan, Yukihiro Matsumoto.</strong> The Ruby Programming Language. O'Reilly Publications.</div></div>
+        <div class="ref-row"><div class="ref-num">5.</div><div class="ref-txt"><strong>Russ Ferguson, Christian Heilmann.</strong> Beginning JavaScript with DOM Scripting and AJAX. Apress.</div></div>
+        <div class="ref-row"><div class="ref-num">6.</div><div class="ref-txt"><strong>Larry Wall, T. Christiansen, J. Orwant.</strong> Programming Perl. O'Reilly.</div></div>
+        <div class="ref-row"><div class="ref-num">7.</div><div class="ref-txt"><strong>J. Lee, B. Ware.</strong> Open Source Web Development with LAMP using Linux, Apache, MySQL, Perl and PHP. Pearson Education.</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ti ti-world"></i> Internet manbalari</div>
+        <div class="ref-row"><div class="ref-num">1.</div><div class="ref-txt"><a href="http://www.perl.org/" target="_blank">www.perl.org</a> — PERL rasmiy sayti</div></div>
+        <div class="ref-row"><div class="ref-num">2.</div><div class="ref-txt"><a href="https://www.ruby-lang.org/" target="_blank">www.ruby-lang.org</a> — Ruby rasmiy sayti</div></div>
+        <div class="ref-row"><div class="ref-num">3.</div><div class="ref-txt"><a href="http://www.intuit.ru/" target="_blank">www.intuit.ru</a> — dasturlash bo‘yicha yozma va video ma’ruzalar</div></div>
+        <div class="ref-row"><div class="ref-num">4.</div><div class="ref-txt"><a href="http://www.ziyonet.uz" target="_blank">www.ziyonet.uz</a> — ta’lim portali</div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function goByKey(key) {
+    const page = document.getElementById('page-' + key);
+    if (!page) {
+      console.warn('Bunday sahifa topilmadi:', 'page-' + key);
+      return;
+    }
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    page.classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    const navItem = document.querySelector('.nav-item[onclick*="' + key + '"]');
+    if (navItem) navItem.classList.add('active');
+
+    document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function go(el, key) {
+    goByKey(key);
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  // URL orqali ochish: index.html#lecture, index.html#sillabus va hokazo
+  window.addEventListener('load', () => {
+    const hash = location.hash.replace('#', '').trim();
+    if (hash && document.getElementById('page-' + hash)) {
+      goByKey(hash);
+    }
+  });
+</script>
+</body>
+</html>
